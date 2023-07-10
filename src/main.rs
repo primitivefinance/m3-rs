@@ -1,34 +1,50 @@
-use alloy_primitives::{Address, U256};
-use alloy_sol_types::{sol, SolCall};
-use hex_literal::hex;
+/// External
+use ethers::prelude::*;
+use itertools_num::linspace;
+use visualize::{design::*, plot::*};
+/// Local
+mod plots;
+mod models;
+use models::rmm_01::*;
+use models::base_model::*;
+use plots::*;
 
-fn main() {
-    println!("Hello, world!");
+const RPC_URL: &str = "https://eth.llamarpc.com";
 
-    sol! {
-        #[derive(Debug, PartialEq)]
-        interface IERC20 {
-            function transfer(address to, uint256 amount) external returns (bool);
-            function approve(address spender, uint256 amount) external returns (bool);
-        }
-    }
+/// tokio
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let provider = Provider::<Http>::try_from(RPC_URL)?;
+    let block_number: U64 = provider.get_block_number().await?;
+    println!("{block_number}");
 
-    // random mainnet ERC20 transfer
-    // https://etherscan.io/tx/0x947332ff624b5092fb92e8f02cdbb8a50314e861a4b39c29a286b3b75432165e
-    let data = hex!(
-        "a9059cbb"
-        "0000000000000000000000008bc47be1e3abbaba182069c89d08a61fa6c2b292"
-        "0000000000000000000000000000000000000000000000000000000253c51700"
+    // Instantiate the model with it's identifying parameters
+    let mut fund = BaseModel::new(
+        "RMM01".to_string(),
+        "0.0.1".to_string(),
+        "1".to_string(),
+        "1".to_string(),
     );
-    let expected = IERC20::transferCall {
-        to: Address::from(hex!("8bc47be1e3abbaba182069c89d08a61fa6c2b292")),
-        amount: U256::from(9995360000_u64),
+
+    // Set it's objective using a chosen model and model parameters.
+    fund.set_objective(Box::new(RMM01 {
+        strike: 3_f64,
+        volatility: 0.5_f64,
+        time_to_maturity: 1.0,
+    }));
+
+    // This example plots the liquidity density over a range of prices, using visualize-rs and the functions in the plot.rs module.
+    let price_start = 0.0_f64;
+    let price_end = 10.0_f64;
+    let number_of_prices = 1000;
+    let prices = linspace(price_start, price_end, number_of_prices).collect::<Vec<f64>>();
+
+    let display = Display {
+        transparent: false,
+        mode: DisplayMode::Light,
+        show: false,
     };
+    plot_liquidity_density(fund, display, prices);
 
-    assert_eq!(data[..4], IERC20::transferCall::SELECTOR);
-    let decoded = IERC20::IERC20Calls::decode(&data, true).unwrap();
-    assert_eq!(decoded, IERC20::IERC20Calls::transfer(expected));
-    assert_eq!(decoded.encode(), data);
-
-    println!("decoded transfer call result: {:?}", decoded);
+    Ok(())
 }
