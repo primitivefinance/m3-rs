@@ -1,17 +1,36 @@
-# af-rs
+# M3-rs
 
-Interact with the Portfolio protocol using Rust models to abstract the underlying pools.
+Constant function market makers are a class of automated market making strategies implemented via smart contracts on blockchain networks like Ethereum. 
+M3-rs is a Rust interface for interacting with these models and their properties, such as the amount of assets that can be sold at a price.
 
+# Install
+```
+Add to Cargo.toml:
+m3-rs = { git = "https://github.com/primitivefinance/m3-rs" }
+```
 
-## What we want:
-Given a uniswap pool with two tokens and a fee tier, export the reserves/liquidity at each tick into a csv
-Given a curve pool with x tokens, export the reserves and compute its liquidity density
-Given a primitive pool with two tokens and params compute its effective price range and liquidity density
-
-## What do I really want to do?
-I want to load a pool into memory so I can analyze it. To analyze it, I want to see its price, effective price range, liquidity distribution, arb bounds, health, etc. Ideally I can export data into a simple format, and also use our visualize-rs tool to render the pool into a nice graph.
-
-To do this, I need to have a clean interface for loading a pool from the chain into memory in a rust data structure.
+# Usage
 
 
-Todo: I want to graph the liquidity density from the chain.
+```rust
+use m3_rs::{...};
+
+fn main() {
+    // Create a base model
+    let mut base = BaseModel::new(
+        "base_model_name".to_string(),
+        "base_model_version".to_string(),
+        "base_model_code".to_string(),
+        "base_model_id".to_string(),
+    );
+
+    // Set it's objective, i.e. the model.
+    base.set_objective(Box::new(RMM01 {
+        strike: 1_f64,
+        volatility: 1_f64,
+        time_to_maturity: 1.0,
+    }))
+
+    // Use the functions in plot.rs to plot different derived data using these models.
+} 
+```
