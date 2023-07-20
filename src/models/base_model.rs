@@ -31,6 +31,7 @@ pub trait Objective {
     fn get_reported_price(&self) -> f64;
     fn get_liquidity_density(&self, prices: Vec<f64>) -> Vec<f64>;
     fn get_virtual_price_range(&self) -> PriceRange;
+    fn get_trading_curve(&self, prices: Vec<f64>, scaling: Option<f64>) -> (Vec<f64>, Vec<f64>);
 }
 
 pub trait ObjectiveDisplay {

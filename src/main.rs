@@ -28,14 +28,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Set it's objective using a chosen model and model parameters.
     fund.set_objective(Box::new(RMM01 {
-        strike: 3_f64,
-        volatility: 0.5_f64,
+        strike: 1_f64,
+        volatility: 0.1_f64,
         time_to_maturity: 1.0,
     }));
 
     // This example plots the liquidity density over a range of prices, using visualize-rs and the functions in the plot.rs module.
     let price_start = 0.0_f64;
-    let price_end = 10.0_f64;
+    let price_end = 20.0_f64;
     let number_of_prices = 1000;
     let prices = linspace(price_start, price_end, number_of_prices).collect::<Vec<f64>>();
 
