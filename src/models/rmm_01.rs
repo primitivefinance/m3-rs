@@ -25,7 +25,7 @@ impl Objective for RMM01 {
     }
 
     fn get_reported_price(&self) -> f64 {
-        todo!()
+        reported_price(self.strike, self.volatility, self.time_to_maturity)
     }
 
     fn get_virtual_price_range(&self) -> PriceRange {
