@@ -39,26 +39,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "af-rs"
-version = "0.1.0"
-dependencies = [
- "alloy-dyn-abi",
- "alloy-json-abi",
- "alloy-primitives",
- "alloy-rlp",
- "alloy-rlp-derive",
- "alloy-sol-macro",
- "alloy-sol-types",
- "ethers",
- "hex-literal",
- "itertools-num",
- "mentat",
- "statrs",
- "tokio",
- "visualize",
-]
-
-[[package]]
 name = "ahash"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2342,6 +2322,26 @@ checksum = "57d27b317e207b10f69f5e75494119e391a96f48861ae870d1da6edac98ca900"
 dependencies = [
  "cc",
  "libc",
+]
+
+[[package]]
+name = "m3-rs"
+version = "0.1.0"
+dependencies = [
+ "alloy-dyn-abi",
+ "alloy-json-abi",
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rlp-derive",
+ "alloy-sol-macro",
+ "alloy-sol-types",
+ "ethers",
+ "hex-literal",
+ "itertools-num",
+ "mentat",
+ "statrs",
+ "tokio",
+ "visualize",
 ]
 
 [[package]]
